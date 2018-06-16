@@ -10,17 +10,20 @@ import UIKit
 import os.log
 
 class TableViewController: UITableViewController, OGDStringDelegate {
-    
-    let ogd = OGD()
-    
-    
 
-    
     //MARK: Properties
     var listOfCodes = [String]()
-    var proName : String = "" {
-        didSet{
-            refreshControl?.endRefreshing()
+
+    // MARK: -
+    private let ogd = OGD()
+    private var answerList: [String]? {
+        didSet {
+            if answerList != nil {
+                refreshControl?.endRefreshing()
+                
+                // Reload the first section (we only have one) animated.
+                tableView.reloadSections([0], with: .automatic)
+            }
         }
     }
 
@@ -29,28 +32,25 @@ class TableViewController: UITableViewController, OGDStringDelegate {
         
         navigationItem.title = "Übersicht"
         
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        ogd.delegate = self
+        
+        ogd.requestOGD(code: listOfCodes[0])
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
-
-    func didFetch(string: String) {
-        self.proName = string
+    
+    // MARK: - Outlets & Views
+    
+    func didFetch(answerList: [String]) {
+        self.answerList = answerList
     }
     
     func didFailFetchingString(error: Error) {
         return
     }
-    
     
 
     // MARK: - Table view data source
@@ -69,8 +69,7 @@ class TableViewController: UITableViewController, OGDStringDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NurCodeZelle", for: indexPath)
 
         // Configure the cell...
-        
-        cell.textLabel?.text = self.listOfCodes[indexPath.row] + "" + proName
+        cell.textLabel?.text = answerList?[indexPath.row]
 
         return cell
     }
@@ -78,42 +77,7 @@ class TableViewController: UITableViewController, OGDStringDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegue(withIdentifier: "segueDetail", sender: nil)
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
+    
 
     // MARK: - Navigation
 

@@ -10,22 +10,24 @@
 import UIKit
 
 protocol OGDStringDelegate {
-    func didFetch(string: String)
+    func didFetch(answerList: [String])
     func didFailFetchingString(error: Error)
 }
 
 
 class OGD {
+    
     var delegate: OGDStringDelegate?
+    
+    // MARK: Properties
+    var answerList: [String.SubSequence] = []
+    var stringAnswerList: [String] = []
+    var answerDic: [String:String] = [:]
+    var product_name: String = ""
+    var producer: String = ""
     
     // Function that request the www.opengtindb.org API which returns a string with informations to a product
     func requestOGD(code gtin: String) {
-        
-        // MARK: Properties
-        var answerList: [String.SubSequence] = []
-        var answerDic: [String:String] = [:]
-        var product_name: String = ""
-        var producer: String = ""
         
         // Set up the URL request
         let ogdAPI = String("http://opengtindb.org/?ean=\(gtin)&cmd=query&queryid=400000000")
@@ -39,54 +41,53 @@ class OGD {
         let session = URLSession(configuration: config)
         
         // make the request
-        let task = session.dataTask(with: urlRequest) {
+        session.dataTask(with: urlRequest) {
             (data, _, error) in
             // check for any errors
-            guard error == nil else {
+            if let error = error {
+                // Make sure UI stuff is run on the main thread
                 OperationQueue.main.addOperation {
-                    self.delegate?.didFailFetchingString(error: error!)
+                    self.delegate?.didFailFetchingString(error: error)
                 }
                 print("error calling GET on /todos/1")
-                print(error!)
+                print(error)
                 return
             }
-            // make sure we got data
-            guard let responseData = data else {
-                print("Error: did not receive data")
-                return
-            }
-            // parse the result, which is String. It willbecome split and placed in a dictionary
-            do {
-                let answer = (String(decoding: responseData, as: UTF8.self))
-                
-                answerList = answer.split(separator: "\n")
-                
-                for entry in answerList {
-                    let entry1 = entry.split(separator: "=")
-                    if entry1.count > 1 {
-                        let foo = String(entry1[0])
-                        let bar = String(entry1[1])
-                        answerDic[foo] = "\(bar)"
+            
+            if let data = data {
+                // parse the result, which is String. It willbecome split and placed in a dictionary
+                do {
+                    let answer = String(decoding: data, as: UTF8.self)
+                    
+                    self.answerList = answer.split(separator: "\n")
+                    
+                    for entry in self.answerList {
+                        let entry1 = entry.split(separator: "=")
+                        if entry1.count > 1 {
+                            let foo = String(entry1[0])
+                            let bar = String(entry1[1])
+                            self.answerDic[foo] = "\(bar)"
+                            self.stringAnswerList.append(foo)
+                            self.stringAnswerList.append(bar)
+                        }
                     }
-                }
-                
-                if answerDic["error"] == "0" {
-                    product_name = answerDic["detailname"]!
-                    producer = answerDic["vendor"]!
                     
                     OperationQueue.main.addOperation {
-                        self.delegate?.didFetch(string: product_name)
+                        self.delegate?.didFetch(answerList: self.stringAnswerList)
                     }
                     
-                } else {
-                    
-                    print("Error-Code der Seite lautet: \(String(describing: answerDic["error"]))")
-                    return
-                    
+                    if self.answerDic["error"] == "0" {
+                        self.product_name = self.answerDic["detailname"]!
+                        self.producer = self.answerDic["vendor"]!
+                        
+                    } else {
+                        
+                        print("Error-Code der Seite lautet: \(String(describing: self.answerDic["error"]))")
+                        return
+                        
+                    }
                 }
             }
-        }
-        task.resume()
+        }.resume()
     }
-    
 }
