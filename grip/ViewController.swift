@@ -17,11 +17,11 @@ class ViewController: UIViewController {
     let SCREEN_SIZE = UIScreen.main.bounds
     let cornerRadius : CGFloat = 5.0
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         setupScanner()
-        
         
 //        requestOGD(code: "4388844154636") {
 //            (result: String) in
@@ -51,7 +51,7 @@ class ViewController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        
+        barcodePicker(<#T##picker: SBSBarcodePicker##SBSBarcodePicker#>, didScan: <#T##SBSScanSession#>)
     }
     
     //MARK: Scanner Setup
@@ -86,7 +86,6 @@ class ViewController: UIViewController {
         barcodePicker.startScanning()
     }
     
-    
     //MARK: Actions
     @objc func buttonAction(sender: UIButton!) {
         //        print("Button pressed")
@@ -100,13 +99,12 @@ extension ViewController: SBSScanDelegate {
     
     func barcodePicker(_ picker: SBSBarcodePicker, didScan session: SBSScanSession) {
         guard let code = session.newlyRecognizedCodes.first else { return }
-        print("scanned \(code.symbologyName) barcode: \(String(describing: code.data))")
-        
         // Gescannten Code zum Array hinzufügen sofern nicht schon vorhanden
         if listOfCodes.contains(code.data!) {
             //            print("Schon gescannt!")
         } else {
             listOfCodes.append(code.data!)
+            print("scanned \(code.symbologyName) barcode: \(String(describing: code.data))")
         }
     }
     func overlayController(_ overlayController: SBSOverlayController, didCancelWithStatus status: [AnyHashable : Any]?) {
