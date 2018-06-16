@@ -9,11 +9,21 @@
 import UIKit
 import os.log
 
-class TableViewController: UITableViewController {
+class TableViewController: UITableViewController, OGDStringDelegate {
+    
+    let ogd = OGD()
+    
+    
+
     
     //MARK: Properties
     var listOfCodes = [String]()
-    
+    var proName : String = "" {
+        didSet{
+            refreshControl?.endRefreshing()
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,6 +41,17 @@ class TableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+
+    func didFetch(string: String) {
+        self.proName = string
+    }
+    
+    func didFailFetchingString(error: Error) {
+        return
+    }
+    
+    
 
     // MARK: - Table view data source
 
@@ -49,16 +70,7 @@ class TableViewController: UITableViewController {
 
         // Configure the cell...
         
-        var foo = requestOGD(code: listOfCodes[indexPath.row]) {
-
-            (result: String) in
-            print(result)
-            return result
-        }
-        
-        print("Foo:", foo)
-        
-        cell.textLabel?.text = self.listOfCodes[indexPath.row] + ""
+        cell.textLabel?.text = self.listOfCodes[indexPath.row] + "" + proName
 
         return cell
     }
