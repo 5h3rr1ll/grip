@@ -16,9 +16,9 @@ class TableViewController: UITableViewController, OGDStringDelegate {
 
     // MARK: -
     private let ogd = OGD()
-    private var answerList: [[String:String]]? {
+    private var product: Product? {
         didSet {
-            if answerList != nil {
+            if product != nil {
                 refreshControl?.endRefreshing()
                 
                 // Reload the first section (we only have one) animated.
@@ -44,11 +44,11 @@ class TableViewController: UITableViewController, OGDStringDelegate {
     
     // MARK: - Outlets & Views
     
-    func didFetch(answerList: [[String:String]]) {
-        self.answerList = answerList
+    func didFetch(product: Product) {
+        self.product = product
     }
     
-    func didFailFetchingString(error: Error) {
+    func didFailFetchingProduct(error: Error) {
         return
     }
     
@@ -69,9 +69,13 @@ class TableViewController: UITableViewController, OGDStringDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NurCodeZelle", for: indexPath)
 
         // Configure the cell...
-        cell.textLabel?.text = answerList?[indexPath.row]["detailname"]
-
-        return cell
+        if product != nil {
+            cell.textLabel?.text = product!.gtin + " " + product!.productName
+            return cell
+        } else {
+            print("Error: produkt is empty!")
+            return cell
+        }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

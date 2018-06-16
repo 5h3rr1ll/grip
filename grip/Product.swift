@@ -11,5 +11,5 @@ import Foundation
 struct Product {
     let gtin: String
     var producer: String
-    var product_name: String
+    var productName: String
 }

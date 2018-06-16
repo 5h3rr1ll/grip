@@ -10,8 +10,8 @@
 import UIKit
 
 protocol OGDStringDelegate {
-    func didFetch(answerList: [[String:String]])
-    func didFailFetchingString(error: Error)
+    func didFetch(product: Product)
+    func didFailFetchingProduct(error: Error)
 }
 
 
@@ -21,10 +21,7 @@ class OGD {
     
     // MARK: Properties
     var answerList: [String.SubSequence] = []
-    var stringAnswerList: [String] = []
     var answerDic: [String:String] = [:]
-    var product_name: String = ""
-    var producer: String = ""
     
     // Function that request the www.opengtindb.org API which returns a string with informations to a product
     func requestOGD(code gtin: String) {
@@ -47,9 +44,10 @@ class OGD {
             if let error = error {
                 // Make sure UI stuff is run on the main thread
                 OperationQueue.main.addOperation {
-                    self.delegate?.didFailFetchingString(error: error)
+                    self.delegate?.didFailFetchingProduct(error: error)
                 }
-                print("error calling GET on /todos/1")
+                print("error calling GET on OptenGTINDatabase")
+                print("Error-Code der Seite lautet: \(String(describing: self.answerDic["error"]))")
                 print(error)
                 return
             }
@@ -67,24 +65,13 @@ class OGD {
                             let foo = String(entry1[0])
                             let bar = String(entry1[1])
                             self.answerDic[foo] = "\(bar)"
-                            self.stringAnswerList.append(foo)
-                            self.stringAnswerList.append(bar)
                         }
                     }
                     
-                    OperationQueue.main.addOperation {
-                        self.delegate?.didFetch(answerList: [self.answerDic])
-                    }
+                    let product = Product(gtin: gtin, producer: self.answerDic["vendor"]!, productName: self.answerDic["detailname"]!)
                     
-                    if self.answerDic["error"] == "0" {
-                        self.product_name = self.answerDic["detailname"]!
-                        self.producer = self.answerDic["vendor"]!
-                        
-                    } else {
-                        
-                        print("Error-Code der Seite lautet: \(String(describing: self.answerDic["error"]))")
-                        return
-                        
+                    OperationQueue.main.addOperation {
+                        self.delegate?.didFetch(product: product)
                     }
                 }
             }
