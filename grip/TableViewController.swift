@@ -16,7 +16,7 @@ class TableViewController: UITableViewController, OGDStringDelegate {
 
     // MARK: -
     private let ogd = OGD()
-    private var answerList: [String]? {
+    private var answerList: [[String:String]]? {
         didSet {
             if answerList != nil {
                 refreshControl?.endRefreshing()
@@ -44,7 +44,7 @@ class TableViewController: UITableViewController, OGDStringDelegate {
     
     // MARK: - Outlets & Views
     
-    func didFetch(answerList: [String]) {
+    func didFetch(answerList: [[String:String]]) {
         self.answerList = answerList
     }
     
@@ -69,7 +69,7 @@ class TableViewController: UITableViewController, OGDStringDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NurCodeZelle", for: indexPath)
 
         // Configure the cell...
-        cell.textLabel?.text = answerList?[indexPath.row]
+        cell.textLabel?.text = answerList?[indexPath.row]["detailname"]
 
         return cell
     }

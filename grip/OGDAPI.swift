@@ -10,7 +10,7 @@
 import UIKit
 
 protocol OGDStringDelegate {
-    func didFetch(answerList: [String])
+    func didFetch(answerList: [[String:String]])
     func didFailFetchingString(error: Error)
 }
 
@@ -73,7 +73,7 @@ class OGD {
                     }
                     
                     OperationQueue.main.addOperation {
-                        self.delegate?.didFetch(answerList: self.stringAnswerList)
+                        self.delegate?.didFetch(answerList: [self.answerDic])
                     }
                     
                     if self.answerDic["error"] == "0" {

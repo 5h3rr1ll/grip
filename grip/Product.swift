@@ -9,7 +9,7 @@
 import Foundation
 
 struct Product {
-    
-    var producer: String = ""
-    var product_name: String = ""
+    let gtin: String
+    var producer: String
+    var product_name: String
 }
