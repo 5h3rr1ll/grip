@@ -8,8 +8,21 @@
 
 import Foundation
 
-struct Product: Codable {
-    let gtin: String
-    var producer: String
-    var productName: String
+struct ProductStruct: Codable {
+//    let product: Product?
+    let productGTIN: String?
+    let productProducer: String?
+    let productName: String?
+    let productConcern: String?
+    let productPictureURL: String?
+//    enum CodingKeys: String, CodingKey {
+//        case product
+//        case productGTIN = "code"
+//        case producer
+//        case productName = "product_name"
+//    }
 }
+
+//struct Product: Codable {
+//    let brand: String?
+//}

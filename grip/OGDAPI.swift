@@ -9,15 +9,15 @@
 
 import UIKit
 
-protocol OGDStringDelegate {
-    func didFetch(product: Product)
+protocol OGDDelegate {
+    func didFetch(product: ProductStruct)
     func didFailFetchingProduct(error: Error)
 }
 
 
 class OGD {
     
-    var delegate: OGDStringDelegate?
+    var delegate: OGDDelegate?
     
     // MARK: Properties
     var answerList: [String.SubSequence] = []
@@ -68,7 +68,7 @@ class OGD {
                         }
                     }
                     
-                    let product = Product(gtin: gtin, producer: self.answerDic["vendor"]!, productName: self.answerDic["detailname"]!)
+                    let product = ProductStruct(productGTIN: gtin, productProducer: self.answerDic["vendor"], productName: self.answerDic["detailname"], productConcern: "", productPictureURL: "")
                     
                     OperationQueue.main.addOperation {
                         self.delegate?.didFetch(product: product)

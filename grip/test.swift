@@ -8,9 +8,12 @@
 
 import UIKit
 
-let gtin = "42113539"
+let gtin = "123"
 
-let apiUrl = "http://opengtindb.org/?ean=\(gtin)&cmd=query&queryid=400000000"
+var foo = Cxecker()
+
+
+//let apiUrl = "http://opengtindb.org/?ean=\(gtin)&cmd=query&queryid=400000000"
 
 
 //func testFoo() {

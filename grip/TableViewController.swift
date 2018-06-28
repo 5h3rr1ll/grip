@@ -9,14 +9,16 @@
 import UIKit
 import os.log
 
-class TableViewController: UITableViewController, OGDStringDelegate {
-
+class TableViewController: UITableViewController, OGDDelegate {
+    
     //MARK: Properties
     var listOfCodes = [String]()
+    
+    let off = OFF()
 
     // MARK: -
     private let ogd = OGD()
-    private var product: Product? {
+    private var product: ProductStruct? {
         didSet {
             if product != nil {
                 refreshControl?.endRefreshing()
@@ -31,10 +33,12 @@ class TableViewController: UITableViewController, OGDStringDelegate {
         super.viewDidLoad()
         
         navigationItem.title = "Übersicht"
-        
+                
         ogd.delegate = self
         
         ogd.requestOGD(code: listOfCodes[0])
+        
+        off.requestOFF(code: listOfCodes[0])
     }
 
     override func didReceiveMemoryWarning() {
@@ -44,7 +48,7 @@ class TableViewController: UITableViewController, OGDStringDelegate {
     
     // MARK: - Outlets & Views
     
-    func didFetch(product: Product) {
+    func didFetch(product: ProductStruct) {
         self.product = product
     }
     
@@ -70,10 +74,10 @@ class TableViewController: UITableViewController, OGDStringDelegate {
 
         // Configure the cell...
         if product != nil {
-            cell.textLabel?.text = product!.gtin + " " + product!.productName
+            cell.textLabel?.text = product!.productGTIN! + " " + product!.productName!
             return cell
         } else {
-            print("Error: produkt is empty!")
+            print("Error: Product is empty!")
             return cell
         }
     }

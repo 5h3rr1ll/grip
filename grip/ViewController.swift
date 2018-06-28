@@ -17,10 +17,17 @@ class ViewController: UIViewController {
     let SCREEN_SIZE = UIScreen.main.bounds
     let cornerRadius : CGFloat = 5.0
     
+    // Only for test reseason
+    let gtin : String = "123"
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        let cxecker = Cxecker()
+        cxecker.ratelyyDB(gtin: gtin)
+        
         setupScanner()
         
 //        requestOGD(code: "4388844154636") {
@@ -51,7 +58,6 @@ class ViewController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        barcodePicker(<#T##picker: SBSBarcodePicker##SBSBarcodePicker#>, didScan: <#T##SBSScanSession#>)
     }
     
     //MARK: Scanner Setup
