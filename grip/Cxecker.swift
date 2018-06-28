@@ -42,12 +42,29 @@ class Cxecker {
             
             if let data = data {
                 do {
+                    var missingAttributes = [String]()
+                    
                     let product = try JSONDecoder().decode([ProductStruct].self, from: data)
                     dump(product)
-//                    let product = try JSONDecoder().decode([ProductStruct.self], from: data)
-                    print("von Cxecker: ",String(decoding: data, as: UTF8.self), "hier kommt die Produkt Var: ", product)
+                    
+                    if product[0].name! == "" {
+                        missingAttributes.append("name")
+                    }
+                    if product[0].concern! == "" {
+                        missingAttributes.append("concern")
+                    }
+                    if product[0].pictureURL! == "" {
+                        missingAttributes.append("pictureULR")
+                    }
+                    if product[0].producer! == "" {
+                        missingAttributes.append("producer")
+                    }
+                    if missingAttributes.count > 0 {
+                        print("Es fehl(t/en) folgende(s) Attribut(e): ", missingAttributes)
+                    }
+                    
                 } catch {
-                    print("error")
+                    print("Error: Cxecker has a problem decoding the data")
                 }
             }
         }.resume()

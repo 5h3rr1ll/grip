@@ -68,7 +68,7 @@ class OGD {
                         }
                     }
                     
-                    let product = ProductStruct(productGTIN: gtin, productProducer: self.answerDic["vendor"], productName: self.answerDic["detailname"], productConcern: "", productPictureURL: "")
+                    let product = ProductStruct(gtin: gtin, name: self.answerDic["vendor"], producer: self.answerDic["detailname"], concern: "", pictureURL: "")
                     
                     OperationQueue.main.addOperation {
                         self.delegate?.didFetch(product: product)

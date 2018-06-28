@@ -74,7 +74,7 @@ class TableViewController: UITableViewController, OGDDelegate {
 
         // Configure the cell...
         if product != nil {
-            cell.textLabel?.text = product!.productGTIN! + " " + product!.productName!
+            cell.textLabel?.text = product!.gtin! + " " + product!.name!
             return cell
         } else {
             print("Error: Product is empty!")

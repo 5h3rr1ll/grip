@@ -10,11 +10,11 @@ import Foundation
 
 struct ProductStruct: Codable {
 //    let product: Product?
-    let productGTIN: String?
-    let productProducer: String?
-    let productName: String?
-    let productConcern: String?
-    let productPictureURL: String?
+    let gtin: String?
+    let name: String?
+    let producer: String?
+    let concern: String?
+    let pictureURL: String?
 //    enum CodingKeys: String, CodingKey {
 //        case product
 //        case productGTIN = "code"

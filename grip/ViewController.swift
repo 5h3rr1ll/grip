@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     let cornerRadius : CGFloat = 5.0
     
     // Only for test reseason
-    let gtin : String = "123"
+    let gtin : String = "42113539"
     
     
     override func viewDidLoad() {
@@ -29,11 +29,6 @@ class ViewController: UIViewController {
         cxecker.ratelyyDB(gtin: gtin)
         
         setupScanner()
-        
-//        requestOGD(code: "4388844154636") {
-//            (result: String) in
-//            print("Was geht ab?", result)
-//        }
         
         //MARK: Button Konfiguration
         let fertigButton = UIButton(frame: CGRect(x: 0, y: SCREEN_SIZE.height-50, width: SCREEN_SIZE.width, height: 50))
